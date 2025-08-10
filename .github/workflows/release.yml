@@ -30,9 +30,10 @@ jobs:
         run: |
           deb_file=$(find . -name "*.deb" | head -n 1)
           echo "deb_file=$deb_file" >> $GITHUB_OUTPUT
-      - name: Create Release
 
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ steps.deb.outputs.deb_file }}
+        env:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
