@@ -2,7 +2,7 @@
 set -e
 
 PKG_NAME="icrn"
-VERSION="0.1.0"
+VERSION="$(git tag -l | sort | tail -1 | perl -p -e 's/^v//')"
 ARCH="all"
 MAINTAINER="Martin-Louis Bright <mlbright+icrn@gmail.com>"
 DESCRIPTION="IMDSv2 Capacity Rebalancing Notifier"
