@@ -9,13 +9,18 @@ DESCRIPTION="IMDSv2 Capacity Rebalancing Notifier"
 
 BUILD_DIR="deb_build"
 INSTALL_DIR="$BUILD_DIR/usr/local/bin"
+SYSTEMD_DIR="$BUILD_DIR/usr/lib/systemd/system"
 
 # Clean up previous build
 rm -rf "$BUILD_DIR"
 mkdir -p "$INSTALL_DIR"
+mkdir -p "$SYSTEMD_DIR"
 
 # Copy your main script or binary (adjust as needed)
 cp icrn "$INSTALL_DIR/$PKG_NAME"
+
+# Copy the systemd service file
+cp icrn.service "$SYSTEMD_DIR/$PKG_NAME.service"
 
 # Create DEBIAN control files
 mkdir -p "$BUILD_DIR/DEBIAN"

@@ -12,6 +12,11 @@ This service will:
 - Automatically restart if it crashes
 - Start automatically on system boot
 
+## Intallation
+
+```
+apt install icrn
+```
 ## Build
 
 ```bash
@@ -22,8 +27,25 @@ For other tasks and actions check the [Makefile](./Makefile)
 
 ## Running the service
 
-Check service status with `systemctl status ec2-monitor`
+Check service status
 
+```bash
+systemctl status icrn
+```
+
+Start the service:
+
+```
+systemctl start icrn
+```
+
+Stop the service:
+
+```
+systemctl stop icrn
+```
+
+```
 ## Packaging
 
 ```bash

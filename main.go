@@ -75,9 +75,8 @@ func checkMetadata(token string, ntfyTopic string) {
 				Message: "Spot instance interruption notice received",
 				Tags:    "info,cloud",
 			})
-			if err != nil {
-				log.Printf("Failed to send ntfy notification: %v", err)
-			}
+		} else {
+			log.Printf("Error decoding spot interruption notice: %v", err)
 		}
 	} else {
 		log.Printf("No spot interruption notice found or error: %v", err)
@@ -102,6 +101,8 @@ func checkMetadata(token string, ntfyTopic string) {
 			if err != nil {
 				log.Printf("Failed to send ntfy notification: %v", err)
 			}
+		} else {
+			log.Printf("Error decoding rebalance recommendation: %v", err)
 		}
 	} else {
 		log.Printf("No rebalance recommendation found or error: %v", err)
@@ -158,7 +159,7 @@ func SendNtfyNotification(msg NtfyMessage) error {
 }
 
 func main() {
-	log.Println("EC2 Interruption Monitor starting...")
+	log.Println("IMDSv2 Capacity Rebalancing Notifier")
 
 	ntfyTopic := os.Getenv("NTFY_TOPIC")
 	if ntfyTopic == "" {
@@ -169,8 +170,8 @@ func main() {
 
 	// Setup signal handling for graceful shutdown
 	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	// Ticker for regular checks
 	ticker := time.NewTicker(checkInterval)
 	defer ticker.Stop()

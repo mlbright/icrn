@@ -1,0 +1,42 @@
+name: Publish .deb to GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: sudo apt-get update && sudo apt-get install -y dpkg-dev
+
+      - name: Build the ICRN binary
+        uses: hashicorp/actions-go-build@main
+        with:
+          go_version: 1.24
+          os: linux
+          arch: amd64
+          instructions: |
+            go build -o icrn
+
+      - name: Build .deb package
+        run: ./build-deb.sh
+
+        id: deb
+      - name: Find .deb package
+        run: |
+          deb_file=$(find . -name "*.deb" | head -n 1)
+          echo "deb_file=$deb_file" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.deb.outputs.deb_file }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
