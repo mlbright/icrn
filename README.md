@@ -1,6 +1,6 @@
 # IMDSv2 Capacity Rebalancing Notifier
 
-Get notified via ntfy.sh about AWS Spot Instance interruptions and rebalancing recommendations using a systemd service.
+Get notified via [ntfy.sh][ntfy] about AWS Spot Instance interruptions and rebalancing recommendations using a systemd service.
 
 ## What is this?
 
@@ -45,9 +45,10 @@ Stop the service:
 systemctl stop icrn
 ```
 
-```
 ## Packaging
 
 ```bash
 make package
 ```
+
+[ntfy]: https://ntfy.sh
