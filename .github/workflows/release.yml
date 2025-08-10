@@ -29,8 +29,8 @@ jobs:
         id: deb
       - name: Find .deb package
         run: |
-          echo "deb_file=$deb_file" >> $GITHUB_OUTPUT
           deb_file=$(find . -name "*.deb" | head -n 1)
+          echo "deb_file=$deb_file" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v2

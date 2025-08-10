@@ -1,3 +1,3 @@
-module github.com/mlbright/dblckr/capacity-ntfy
+module github.com/mlbright/icrn
 
-go 1.24.3
+go 1.24.5
