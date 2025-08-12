@@ -45,6 +45,15 @@ Stop the service:
 systemctl stop icrn
 ```
 
+### Setting the Ntfy topic
+
+Set the ntfy topic by creating a systemd settings override file:
+
+```bash
+mkdir -p /etc/systemd/system/icrn.service.d
+echo -e "[Service]\nEnvironment=NTFY_TOPIC=my-topic" > /etc/systemd/system/icrn.service.d/override.conf
+```
+
 ## Packaging
 
 ```bash
