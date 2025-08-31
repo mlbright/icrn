@@ -24,6 +24,11 @@ const (
 	checkInterval = 5 * time.Second
 )
 
+var (
+	spotNotified      bool
+	rebalanceNotified bool
+)
+
 // SpotInterruptionNotice represents the spot instance interruption notice
 type SpotInterruptionNotice struct {
 	Action string    `json:"action"`
@@ -69,17 +74,21 @@ func checkMetadata(token string, ntfyTopic string) {
 		err = json.NewDecoder(resp.Body).Decode(&notice)
 		if err == nil {
 			log.Printf("SPOT INTERRUPTION NOTICE: Action: %s, Time: %s", notice.Action, notice.Time)
-			err = SendNtfyNotification(NtfyMessage{
-				Topic:   ntfyTopic,
-				Title:   "EC2 Spot Instance Interruption",
-				Message: "Spot instance interruption notice received",
-				Tags:    "info,cloud",
-			})
+			if !spotNotified {
+				err = SendNtfyNotification(NtfyMessage{
+					Topic:   ntfyTopic,
+					Title:   "EC2 Spot Instance Interruption",
+					Message: "Spot instance interruption notice received",
+					Tags:    "info,cloud",
+				})
+				if err != nil {
+					log.Printf("Failed to send ntfy notification: %v", err)
+				}
+				spotNotified = true
+			}
 		} else {
 			log.Printf("Error decoding spot interruption notice: %v", err)
 		}
-	} else {
-		log.Printf("No spot interruption notice found or error: %v", err)
 	}
 
 	// Check for rebalance recommendation
@@ -92,20 +101,21 @@ func checkMetadata(token string, ntfyTopic string) {
 		var rebalance RebalanceRecommendation
 		if err = json.NewDecoder(resp.Body).Decode(&rebalance); err == nil {
 			log.Printf("REBALANCE RECOMMENDATION: Notice Time: %s", rebalance.NoticeTime)
-			err = SendNtfyNotification(NtfyMessage{
-				Topic:   ntfyTopic,
-				Title:   "EC2 Rebalance Recommendation",
-				Message: "Instance received rebalance recommendation",
-				Tags:    "info,cloud",
-			})
-			if err != nil {
-				log.Printf("Failed to send ntfy notification: %v", err)
+			if !rebalanceNotified {
+				err = SendNtfyNotification(NtfyMessage{
+					Topic:   ntfyTopic,
+					Title:   "EC2 Rebalance Recommendation",
+					Message: "Instance received rebalance recommendation",
+					Tags:    "info,cloud",
+				})
+				if err != nil {
+					log.Printf("Failed to send ntfy notification: %v", err)
+				}
+				rebalanceNotified = true
 			}
 		} else {
 			log.Printf("Error decoding rebalance recommendation: %v", err)
 		}
-	} else {
-		log.Printf("No rebalance recommendation found or error: %v", err)
 	}
 }
 

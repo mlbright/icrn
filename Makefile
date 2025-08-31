@@ -1,6 +1,6 @@
 .PHONY: build install uninstall clean
 
-build:
+build: main.go
 	go build -o icrn main.go
 
 install: build
